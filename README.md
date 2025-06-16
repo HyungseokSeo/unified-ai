@@ -30,7 +30,7 @@ To set up the project and run the simulations, follow these steps:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/HyungseokSeo/unified-ai
+    git clone https://github.com/HyungseokSeo/unified-ai.git
     cd unified-ai
     ```
     *(Remember to replace `YourUsername/your-thesis-unified-ai.git` with your actual GitHub repository URL)*
