@@ -1,18 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 # Grid setup
 GRID_SIZE = 5
+
+# Define the starting positions for Agent A and Agent B.
 A_start = np.array([0, 0])
 B_start = np.array([4, 0])
+
+# Define the real and fake goals for Agent A.
 A_goal_real = np.array([4, 4])
 A_goal_fake = np.array([0, 4])
-switch_step = 5  # When A switches from fake to real
+
+# Define when Agent A switches its true goal from fake to real.
+switch_step = 5 
+
+# Define the total number of simulation steps.
 steps = 10
+
 # Simple planner: move toward a goal
 def move_toward(pos, goal):
     direction = goal - pos
     step = np.clip(direction, -1, 1)
     return pos + step
+    
 # Belief update: based on distance
 def update_belief(pos, fake, real):
     d_fake = np.linalg.norm(fake - pos)
@@ -21,13 +32,13 @@ def update_belief(pos, fake, real):
     p_real = 1 / (d_real + 1e-3)
     total = p_fake + p_real
     return p_fake / total, p_real / total
+    
 # Simulate
 A_pos = A_start.copy()
 B_pos = B_start.copy()
 A_path = [A_pos.copy()]
 B_path = [B_pos.copy()]
 beliefs = []
-
 for t in range(steps):
     goal = A_goal_fake if t < switch_step else A_goal_real
     A_pos = move_toward(A_pos, goal)
@@ -39,11 +50,13 @@ for t in range(steps):
     A_path.append(A_pos.copy())
     B_path.append(B_pos.copy())
     beliefs.append(B_belief)
+    
 # Plot
 A_path = np.array(A_path)
 B_path = np.array(B_path)
 beliefs = np.array(beliefs)
 
+# Visualize the simulation results: agent paths and belief dynamics.
 plt.figure(figsize=(12, 4))
 plt.subplot(1, 2, 1)
 plt.plot(A_path[:, 0], A_path[:, 1], '-o', label='Agent A')
@@ -54,6 +67,7 @@ plt.title('Paths of Agent A (deceptive) and B (predictive)')
 plt.legend()
 plt.grid(True)
 
+# Subplot 2: Agent B Belief Update Over Time
 plt.subplot(1, 2, 2)
 plt.plot(beliefs[:, 0], label='B: Belief in Fake Goal')
 plt.plot(beliefs[:, 1], label='B: Belief in Real Goal')
