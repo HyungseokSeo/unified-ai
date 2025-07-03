@@ -61,30 +61,7 @@ class FakeGoalMasker(nn.Module):
         energies = [energy_fn(z, goal) for z, _ in trajectory]
         return all((energies[i] <= energies[i-1] + self.threshold) 
                   for i in range(1, len(energies))) 
-*************
-Key Features
-Flexible Energy Types (Section 5.2):
-
-l2: Euclidean distance (default, simple and interpretable).
-
-cosine: Directional alignment (useful for semantic goals).
-
-learned: Neural network (captures complex, task-specific metrics).
-
-Fake Goal Masking (Chapter 4.4):
-
-Prunes trajectories where energy doesn’t decrease monotonically.
-
-Configurable threshold (energy_threshold) for robustness.
-
-Modular Design:
-
-Plug into UnifiedAgent from unified_agent.py.
-
-Compatible with JEPA’s latent space.
-
-*********************
-#### usage example
+### usage example
 from components.energy_function import EnergyFunction, FakeGoalMasker
 
 # Initialize
@@ -96,38 +73,8 @@ for goal in goals:
     trajectory = self.rollout(z_t, goal)
     if masker(trajectory, goal, energy_fn):  # Apply masking
         energy = sum(energy_fn(z, goal) for z, _ in trajectory)
-        ...
-######
-******
-Integration with Your Thesis
-Component	Thesis Reference	Purpose
-EnergyFunction	Chapter 5 (Energy Minimization)	Quantifies goal alignment and trajectory plausibility.
-FakeGoalMasker	Chapter 4.4 (Fake Goal Masking)	Filters out unstable/incoherent rollouts during planning.
-learned energy	Section 5.3 (Learned Energy)	Captures complex goal relationships (e.g., semantic tasks).
-Next Steps
-Train the Learned Energy Function:
-Add a training loop using contrastive loss (positive = low energy, negative = high energy):
-*********
+#        ...
+
 pos_energy = energy_fn(z_pos, g)  # z_pos aligns with g
 neg_energy = energy_fn(z_neg, g)  # z_neg contradicts g
 loss = torch.relu(pos_energy - neg_energy + margin).mean()
-########
-Add to Your Repo:
-Place this file in unified-ai/components/energy_function.py and update imports in unified_agent.py.
-
-Extend:
-
-Add multi-objective energy (e.g., E(z, g) = w1*E1 + w2*E2).
-
-Implement energy-based exploration (Chapter 6).
-
-Let me know if you’d like to:
-
-See the training loop for the learned energy function.
-
-Adapt this for your GridWorld environment.
-
-Add visualization tools for energy landscapes.
-
-Your energy-based reasoning module is ready! ⚡
-#############
